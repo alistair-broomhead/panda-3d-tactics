@@ -17,6 +17,6 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     install_requires=[
-        'panda3d>=1.10.4.1',
+        'panda3d==1.10.6',
     ]
 )
