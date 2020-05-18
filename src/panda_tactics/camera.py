@@ -1,8 +1,9 @@
-from collections import Iterable
-from math import pi, sin, cos
+import collections
+import math
 
-from direct.interval.LerpInterval import LerpPosHprInterval
-from panda3d.core import Point3, Vec3F
+# noinspection PyPackageRequirements,PyPep8Naming
+from direct.interval import LerpInterval as interval
+import panda3d.core
 
 
 class Angle:
@@ -16,9 +17,9 @@ class Angle:
     @degrees.setter
     def degrees(self, degrees):
         self._degrees = degrees
-        self.radians = radians = degrees * pi / 180
-        self.sin = sin(radians)
-        self.cos = cos(radians)
+        self.radians = radians = degrees * math.pi / 180
+        self.sin = math.sin(radians)
+        self.cos = math.cos(radians)
 
 
 class Focus:
@@ -72,7 +73,7 @@ class Focus:
     @property
     def offset(self):
         if self._offset is None:
-            self._offset = Vec3F(
+            self._offset = panda3d.core.Vec3F(
                 self._distance * self._longitude.sin * self._latitude.cos,
                 -self._distance * self._longitude.cos * self._latitude.cos,
                 -self._distance * self._latitude.sin,
@@ -82,7 +83,7 @@ class Focus:
     @property
     def hpr(self):
         if self._hpr is None:
-            self._hpr = Point3(
+            self._hpr = panda3d.core.Point3(
                 self._longitude.degrees,
                 self._latitude.degrees,
                 self._skew
@@ -114,14 +115,19 @@ class Focus:
 
 class PlayerCamera:
     _movement = None
-    _target = Point3(0, 0, 0)
+    _target = panda3d.core.Point3(0, 0, 0)
     _focus = Focus(distance=15, longitude=0, latitude=-50)
 
-    def __init__(self, camera, focus=_focus, target=_target):
+    def _on_move(self, point: panda3d.core.Point3):
+        pass
+
+    def __init__(self, camera, focus=_focus, target=_target, on_move=None):
         self.camera = camera
-        self._target = target
-        self._focus = focus
-        self._move()
+
+        if on_move is not None:
+            self._on_move = on_move
+
+        self._move(focus=focus, target=target)
 
     def retarget_relative(self, x=0, y=0, z=0):
         """
@@ -141,16 +147,16 @@ class PlayerCamera:
 
             previous = self._target
 
-            self._move(target=Point3(
+            self._move(target=panda3d.core.Point3(
                 x + previous.x,
                 y + previous.y,
                 z + previous.z,
             ))
 
     def retarget_to(self, target):
-        if isinstance(target, Iterable):
-            target = Point3(*target)
-        elif not isinstance(target, Point3):
+        if isinstance(target, collections.Iterable):
+            target = panda3d.core.Point3(*target)
+        elif not isinstance(target, panda3d.core.Point3):
             target = target.get_pos()
 
         self._move(target=target)
@@ -179,8 +185,9 @@ class PlayerCamera:
             target = self._target
         else:
             self._target = target
+            self._on_move(target)
 
-        self._movement = LerpPosHprInterval(
+        self._movement = interval.LerpPosHprInterval(
             nodePath=self.camera,
             duration=0.1,
             pos=target + focus.offset,
