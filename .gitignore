@@ -1,3 +1,7 @@
+# tool-based
+.idea/
+*.blend
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
