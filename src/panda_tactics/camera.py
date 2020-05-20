@@ -1,6 +1,7 @@
 import collections
 import math
 
+# Panda3D provides that unhelpfully orphaned 'direct' package as well as its own
 # noinspection PyPackageRequirements,PyPep8Naming
 from direct.interval import LerpInterval as interval
 import panda3d.core
@@ -126,6 +127,9 @@ class PlayerCamera:
 
         if on_move is not None:
             self._on_move = on_move
+
+        if not isinstance(target, panda3d.core.Point3):
+            target = panda3d.core.Point3(*target)
 
         self._move(focus=focus, target=target)
 

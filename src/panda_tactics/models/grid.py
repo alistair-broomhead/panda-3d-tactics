@@ -9,9 +9,9 @@ class GridBox(Model):
         return f'GridBox({self.pos}, selected={self.selected})'
 
     class Materials:
-        main_unselected = material(1, Palette.purple)
-        main_selected = material(1, Palette.lilac)
-        highlight = material(0, Palette.lilac)
+        main_unselected = material(1, Palette.specular_purple)
+        main_selected = material(1, Palette.specular_purple)
+        highlight = material(0, Palette.emission_yellow)
 
     def select(self):
         self.selected = True
@@ -21,15 +21,13 @@ class GridBox(Model):
         self.selected = False
 
     def _update_selected(self):
-        print(self)
-
         selected = self.selected
         if selected:
-            self._outline.set_color(Palette.blue)
+            self._outline.set_color(Palette.ambient_blue)
             self._outline.set_material(self.Materials.main_selected, 1)
             self._highlight.show()
         else:
-            self._outline.set_color(Palette.light_blue)
+            self._outline.set_color(Palette.ambient_light_blue)
             self._outline.set_material(self.Materials.main_unselected, 1)
             self._highlight.hide()
 
@@ -52,15 +50,13 @@ class GridBox(Model):
         self._outline = self._loader.load_model(
             'grid-box-outline',
             parent=self.node,
-            scale=0.5,
             two_sided=True,
         )
         self._highlight = self._loader.load_model(
             'grid-box-highlight',
             parent=self.node,
-            scale=0.5,
             two_sided=True,
-            colour=Palette.yellow,
+            colour=Palette.ambient_yellow,
             material_=self.Materials.highlight,
         )
 

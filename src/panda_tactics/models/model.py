@@ -67,13 +67,13 @@ class Loader:
 
     _model_path = pathlib.Path('assets/models')
 
-    def __init__(self, app):
-        self.app = app
+    def __init__(self, base):
+        self.base = base
         self._loaded = {}
         self._geom = {}
 
     def new_node(self, name):
-        return self.app.render.attach_new_node(
+        return self.base.render.attach_new_node(
             GeomNode(str(name))
         )
 
@@ -88,7 +88,7 @@ class Loader:
                 geometry = self._loaded[model_name] = json.load(json_file)
         except FileNotFoundError:
             geometry = self._loaded[model_name] = read_model(
-                self.app.loader.load_model(
+                self.base.loader.load_model(
                     str((self._model_path / model_name).as_posix())
                 )
             )
@@ -127,7 +127,7 @@ class Loader:
         node.add_geom(self._geometry(model_name))
 
         if parent is None:
-            parent = self.app.render
+            parent = self.base.render
 
         model = parent.attach_new_node(node)
         model.set_transparency(transparency)
@@ -146,16 +146,19 @@ class Loader:
 
 
 class Model:
-    _app = None
+    _base = None
     _loader = None
 
     @classmethod
-    def associate_app(cls, app):
-        Model._app = app
-        Model._loader = Loader(app)
+    def associate_base(cls, base):
+        Model._base = base
+        Model._loader = Loader(base)
 
     def __init__(self, pos):
-        if self._loader is None:
-            raise ValueError(f'{type(self)} must be associated with an app before it can be initialised')
+        if self._base is None:
+            raise ValueError(
+                f'{type(self)} must be associated with an base '
+                f'before it can be initialised'
+            )
 
         self.pos = pos
