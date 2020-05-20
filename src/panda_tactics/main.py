@@ -16,7 +16,7 @@ class PandaTactics:
         render = self.base.render
 
         ambient_light = AmbientLight("global_illumination")
-        ambient_light.set_color((.1, .1, .1, 0))
+        ambient_light.set_color((0.1, 0.1, 0.1, 0))
         ambient = render.attach_new_node(ambient_light)
         render.set_light(ambient)
 
@@ -52,9 +52,7 @@ class PandaTactics:
         self.make_light()
 
         self.camera = PlayerCamera(
-            self.base.camera,
-            on_move=self.select_cube,
-            target=(0, -10, 0)
+            self.base.camera, on_move=self.select_cube, target=(0, -10, 0)
         )
         self.controls = Controls(self.camera)
 

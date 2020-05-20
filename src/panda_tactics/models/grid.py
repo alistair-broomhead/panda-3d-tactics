@@ -6,7 +6,7 @@ class GridBox(Model):
     _selected = None
 
     def __str__(self):
-        return f'GridBox({self.pos}, selected={self.selected})'
+        return f"GridBox({self.pos}, selected={self.selected})"
 
     class Materials:
         main_unselected = material(1, Palette.specular_purple)
@@ -48,12 +48,10 @@ class GridBox(Model):
         self.node.set_pos(pos)
 
         self._outline = self._loader.load_model(
-            'grid-box-outline',
-            parent=self.node,
-            two_sided=True,
+            "grid-box-outline", parent=self.node, two_sided=True,
         )
         self._highlight = self._loader.load_model(
-            'grid-box-highlight',
+            "grid-box-highlight",
             parent=self.node,
             two_sided=True,
             colour=Palette.ambient_yellow,

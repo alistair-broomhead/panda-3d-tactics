@@ -40,11 +40,13 @@ class Focus:
         return num
 
     def __str__(self):
-        return (f'Focus('
-                f'distance={self.distance}, '
-                f'longitude={self.longitude}, '
-                f'latitude={self.latitude}, '
-                f'skew={self.skew})')
+        return (
+            f"Focus("
+            f"distance={self.distance}, "
+            f"longitude={self.longitude}, "
+            f"latitude={self.latitude}, "
+            f"skew={self.skew})"
+        )
 
     def __init__(self, distance=1, longitude=0, latitude=0, skew=0):
         if distance < 1:
@@ -85,9 +87,7 @@ class Focus:
     def hpr(self):
         if self._hpr is None:
             self._hpr = panda3d.core.Point3(
-                self._longitude.degrees,
-                self._latitude.degrees,
-                self._skew
+                self._longitude.degrees, self._latitude.degrees, self._skew
             )
         return self._hpr
 
@@ -151,11 +151,11 @@ class PlayerCamera:
 
             previous = self._target
 
-            self._move(target=panda3d.core.Point3(
-                x + previous.x,
-                y + previous.y,
-                z + previous.z,
-            ))
+            self._move(
+                target=panda3d.core.Point3(
+                    x + previous.x, y + previous.y, z + previous.z,
+                )
+            )
 
     def retarget_to(self, target):
         if isinstance(target, collections.Iterable):
@@ -172,8 +172,7 @@ class PlayerCamera:
         """
         if self._movement.stopped:
             self._move(
-                focus=self._focus.moved(distance)
-                                 .rotated(longitude, latitude, skew)
+                focus=self._focus.moved(distance).rotated(longitude, latitude, skew)
             )
 
     def refocus_to(self, focus: Focus):
@@ -196,6 +195,6 @@ class PlayerCamera:
             duration=0.1,
             pos=target + focus.offset,
             hpr=focus.hpr,
-            blendType='easeInOut',
+            blendType="easeInOut",
         )
         self._movement.start()

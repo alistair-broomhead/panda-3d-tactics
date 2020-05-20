@@ -1,6 +1,7 @@
 # Panda3D provides that unhelpfully orphaned 'direct' package as well as its own
 # noinspection PyPackageRequirements
 from direct.filter.CommonFilters import CommonFilters
+
 # noinspection PyPackageRequirements
 from direct.showbase.ShowBase import ShowBase
 
@@ -22,5 +23,5 @@ class TacticsBase(ShowBase):
             delayTime=0,
             funcOrTask=self.bufferViewer.enable,
             extraArgs=(1,),
-            name='Enable Buffer Viewer'
+            name="Enable Buffer Viewer",
         )

@@ -12,15 +12,15 @@ def read_model(model):
     def process(geom):
         vertex_data = geom.getVertexData()
         return {
-            'vertices': tuple(process_vertices(vertex_data)),
-            'triangles': tuple(
+            "vertices": tuple(process_vertices(vertex_data)),
+            "triangles": tuple(
                 process_primitive(geom.getPrimitive(i))
                 for i in range(geom.getNumPrimitives())
             ),
         }
 
     def process_vertices(vertex_data):
-        vertex = GeomVertexReader(vertex_data, 'vertex')
+        vertex = GeomVertexReader(vertex_data, "vertex")
         while not vertex.isAtEnd():
             yield tuple(vertex.getData3())
 
@@ -29,26 +29,22 @@ def read_model(model):
 
         return tuple(
             tuple(
-                primitive.getVertex(i) for i in range(
-                    primitive.getPrimitiveStart(p),
-                    primitive.getPrimitiveEnd(p),
+                primitive.getVertex(i)
+                for i in range(
+                    primitive.getPrimitiveStart(p), primitive.getPrimitiveEnd(p),
                 )
             )
             for p in range(primitive.getNumPrimitives())
         )
 
-    for geometry_node_path in model.findAllMatches('**/+GeomNode'):
+    for geometry_node_path in model.findAllMatches("**/+GeomNode"):
         return process_node(geometry_node_path.node())
 
 
 def create_vertex_data(model_name, vertices):
-    vertex_data = GeomVertexData(
-        model_name,
-        GeomVertexFormat.get_v3(),
-        Geom.UHStatic,
-    )
+    vertex_data = GeomVertexData(model_name, GeomVertexFormat.get_v3(), Geom.UHStatic,)
     vertex_data.set_num_rows(len(vertices))
-    writer = GeomVertexWriter(vertex_data, 'vertex')
+    writer = GeomVertexWriter(vertex_data, "vertex")
     for vertex in vertices:
         writer.add_data3f(*vertex)
 
@@ -65,7 +61,7 @@ def create_triangles(primitives):
 
 class Loader:
 
-    _model_path = pathlib.Path('assets/models')
+    _model_path = pathlib.Path("assets/models")
 
     def __init__(self, base):
         self.base = base
@@ -73,15 +69,13 @@ class Loader:
         self._geom = {}
 
     def new_node(self, name):
-        return self.base.render.attach_new_node(
-            GeomNode(str(name))
-        )
+        return self.base.render.attach_new_node(GeomNode(str(name)))
 
     def _raw_geometry(self, model_name):
         if model_name in self._loaded:
             return self._loaded[model_name]
 
-        json_file_name = self._model_path / f'{model_name}.json'
+        json_file_name = self._model_path / f"{model_name}.json"
 
         try:
             with open(json_file_name) as json_file:
@@ -92,7 +86,7 @@ class Loader:
                     str((self._model_path / model_name).as_posix())
                 )
             )
-            with open(json_file_name, 'w') as json_file:
+            with open(json_file_name, "w") as json_file:
                 json.dump(geometry, json_file, indent=1)
 
         return geometry
@@ -103,8 +97,8 @@ class Loader:
 
         raw = self._raw_geometry(model_name)
 
-        vertex_data = create_vertex_data(model_name, raw['vertices'])
-        triangles = create_triangles(raw['triangles'])
+        vertex_data = create_vertex_data(model_name, raw["vertices"])
+        triangles = create_triangles(raw["triangles"])
 
         self._geom[model_name] = geom = Geom(vertex_data)
         for triangle in triangles:
@@ -157,8 +151,8 @@ class Model:
     def __init__(self, pos):
         if self._base is None:
             raise ValueError(
-                f'{type(self)} must be associated with an base '
-                f'before it can be initialised'
+                f"{type(self)} must be associated with an base "
+                f"before it can be initialised"
             )
 
         self.pos = pos

@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='panda-3d-tactica',
-    package_data={'': ['*.md', '*.txt']},
+    package_data={'': ['*.md', '*.txt', '*.json']},
     author='Alistair Broomhead',
     version='0.0.0',
     author_email='alistair.broomhead@gmail.com',
@@ -18,5 +18,10 @@ setup(
     package_dir={'': 'src'},
     install_requires=[
         'panda3d==1.10.6',
-    ]
+    ],
+    extras_require={
+        'dev': [
+            'black'
+        ]
+    },
 )
